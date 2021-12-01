@@ -5,7 +5,6 @@ using Script.FSM;
 using Script.Util;
 using UnityEngine;
 using static Script.Util.Facade;
-using static Script.Util.Facade;
 
 namespace Script.Player
 {
@@ -49,7 +48,7 @@ namespace Script.Player
                 d.maxHealth = Stat.maxHealth;
                 d.moveSpeed = Stat.moveSpeed;
             };
-            data += Inventory.SaveData;
+            // data += Inventory.SaveData;
         }
 
         private void Update()

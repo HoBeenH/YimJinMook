@@ -1,30 +1,31 @@
-using System;
 using System.Collections.Generic;
-using Script.Player;
 using Script.Util;
-using Sirenix.Utilities;
-using UnityEngine;
 
 namespace Script.Data
 {
+    public enum ItemName
+    {
+        Test,
+        End
+    }
     public class ItemPool : MonoSingleton<ItemPool>
     {
         public List<ItemData> itemList = new List<ItemData>();
-        private readonly Dictionary<int, ItemData> m_List = new Dictionary<int, ItemData>();
+        private readonly Dictionary<ItemName, ItemData> m_List = new Dictionary<ItemName, ItemData>();
 
         private void Awake()
         {
-            itemList.ForEach(x => m_List.Add(x.GetHashCode(), x));
+            itemList.ForEach(x => m_List.Add(x.name, x));
         }
 
-        public List<ItemData> InitInventory(List<int> list)
+        public List<ItemData> InitInventory(List<ItemName> list)
         {
             var _itemList = new List<ItemData>();
             list.ForEach(x => _itemList.Add(m_List[x]));
             return _itemList;
         }
 
-        public ItemData Find(int hash) => m_List[hash];
+        public ItemData Find(ItemName hash) => m_List[hash];
     }
 
 }

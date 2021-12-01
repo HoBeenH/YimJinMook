@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Script.Data;
 using Script.Util;
 using UnityEngine;
@@ -36,7 +35,7 @@ namespace Script.Manager
             {
                 var _data = File.ReadAllText(_path);
                 m_Data = JsonUtility.FromJson<PlayData>(_data);
-                // _PlayerController.Inventory.LoadData(m_Data.itemList);
+                _PlayerController.Inventory.LoadData(m_Data.items);
             }
             else
             {
@@ -53,9 +52,9 @@ namespace Script.Manager
                 {
                     false
                 },
-                itemList = new []
+                items = new []
                 {
-                    20,40,60   
+                    ItemName.End   
                 },
             };
         }

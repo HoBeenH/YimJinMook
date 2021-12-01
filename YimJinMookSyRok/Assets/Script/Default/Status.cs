@@ -1,4 +1,3 @@
-using UnityEngine;
 using static Script.Util.Facade;
 
 namespace Script.Default

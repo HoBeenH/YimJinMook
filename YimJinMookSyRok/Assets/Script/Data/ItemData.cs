@@ -6,11 +6,11 @@ namespace Script.Data
 {
     public abstract class ItemData : MonoBehaviour
     {
-        public string name;
+        public ItemName name;
         public GameObject item;
         public Action<PlayerController> action;
 
-        public virtual void GetItem()
+        protected virtual void GetItem(PlayerController data)
         {
             
         }

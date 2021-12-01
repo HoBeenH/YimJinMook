@@ -1,12 +1,16 @@
-using System;
 using Script.Data;
-using UnityEditor;
-using UnityEngine;
+using Script.Player;
 
 public class Test : ItemData
 {
-    public override void GetItem()
+    private void Awake()
     {
-        base.GetItem();
+        name = ItemName.Test;
+        action = GetItem;
+    }
+
+    protected override void GetItem(PlayerController data)
+    {
+        data.Stat.maxHealth += 10;
     }
 }
