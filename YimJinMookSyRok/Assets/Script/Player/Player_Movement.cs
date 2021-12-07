@@ -11,7 +11,7 @@ namespace Script.Player
         private Rigidbody2D rig;
         private SpriteRenderer m_Sr;
         private Vector2 m_Dir;
-        
+
         protected override void Init()
         {
             rig = owner.GetComponent<Rigidbody2D>();
@@ -29,21 +29,23 @@ namespace Script.Player
         {
             if (Input.GetKey(KeyCode.A))
             {
-                machine.anim.SetBool(s_IsMove,true);
+                m_Sr.sprite = owner.tmp;
+                machine.anim.SetBool(s_IsMove, true);
                 m_Dir = Vector2.left;
                 m_Sr.flipX = false;
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                machine.anim.SetBool(s_IsMove,true);
+                machine.anim.SetBool(s_IsMove, true);
                 m_Dir = Vector2.right;
                 m_Sr.flipX = true;
             }
             else
             {
-                machine.anim.SetBool(s_IsMove,false);
+                machine.anim.SetBool(s_IsMove, false);
                 m_Dir = Vector2.zero;
             }
+
             owner.transform.Translate(m_Dir * owner.Stat.moveSpeed * Time.deltaTime);
         }
 
@@ -53,7 +55,14 @@ namespace Script.Player
             {
                 rig.AddForce(owner.transform.right * 30f * -1, ForceMode2D.Impulse);
             }
+
+            if (Input.GetMouseButtonDown(0) && owner.de)
+            {
+                machine.ChangeState(typeof(Player_Attack));
+            }
         }
+
+  
 
         private void Test()
         {

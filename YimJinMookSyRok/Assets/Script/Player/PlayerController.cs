@@ -4,6 +4,7 @@ using Script.Default;
 using Script.FSM;
 using Script.Util;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Script.Util.Facade;
 
 namespace Script.Player
@@ -15,6 +16,8 @@ namespace Script.Player
         public Inventory Inventory { get; private set; }
         private StateMachine<PlayerController> m_Machine;
         private Animator m_Anim;
+        public Sprite tmp;
+        public bool de;
 
         #region Player Status
 
@@ -32,6 +35,8 @@ namespace Script.Player
             Stat = new PlayerStatus(_health, _damage, _moveSpeed);
             m_Anim = GetComponent<Animator>();
             m_Machine = new StateMachine<PlayerController>(new Player_Movement(), this, m_Anim);
+            m_Machine.AddState(new Player_Attack());
+            m_Machine.AddState(new Player_Hit());
 
             InitAction(ref _DataManager.save);
         }
@@ -55,10 +60,14 @@ namespace Script.Player
 
         public void Hit(float damage)
         {
-            Stat.Health -= damage;
-            if (Stat.Health <= 0)
+            // Stat.Health -= damage;
+            // if (Stat.Health <= 0)
+            // {
+            //     // 사망
+            // }
+            // else
             {
-                // 사망
+                m_Machine.ChangeState(typeof(Player_Hit));
             }
         }
 
