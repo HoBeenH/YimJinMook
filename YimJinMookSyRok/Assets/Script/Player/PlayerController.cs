@@ -8,7 +8,7 @@ using static Script.Util.Facade;
 
 namespace Script.Player
 {
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
     public class PlayerController : MonoSingleton<PlayerController>
     {
         public PlayerStatus Stat { get; private set; }
@@ -24,10 +24,7 @@ namespace Script.Player
 
         #endregion
 
-        private void Awake()
-        {
-            Init();
-        }
+        private void Awake() => Init();
 
         private void Init()
         {
@@ -35,12 +32,12 @@ namespace Script.Player
             Stat = new PlayerStatus(_health, _damage, _moveSpeed);
             m_Anim = GetComponent<Animator>();
             m_Machine = new StateMachine<PlayerController>(new Player_Movement(), this, m_Anim);
-            
+
             InitAction(ref _DataManager.save);
         }
 
         private void InitAction(ref Action<PlayData> data)
-        { 
+        {
             data += d =>
             {
                 d.damage = Stat.damage;

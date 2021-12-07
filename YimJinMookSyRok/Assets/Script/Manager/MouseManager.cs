@@ -20,6 +20,7 @@ namespace Script.Manager
          * 
          */
 
+        [SerializeField] private const string TAG_JUMP = "Jump";
         public bool Test = false;
 
         private void Update()
@@ -34,9 +35,8 @@ namespace Script.Manager
 
             if (_hit.collider != null && Input.GetMouseButtonDown(0))
             {
-                Debug.Log("1");
                 var _tag = _hit.collider.tag;
-                if (_tag.Equals("Jump"))
+                if (_tag.Equals(TAG_JUMP))
                 {
                     Test = true;
                 }

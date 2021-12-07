@@ -15,9 +15,9 @@ namespace Script.Manager
 
         private void Awake()
         {
+            Debug.LogWarning(SavePath());
             LoadData();
             SaveData();
-            Debug.LogWarning(SavePath());
         }
 
         private void SaveData()
