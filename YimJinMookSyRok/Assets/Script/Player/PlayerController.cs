@@ -16,8 +16,6 @@ namespace Script.Player
         public Inventory Inventory { get; private set; }
         private StateMachine<PlayerController> m_Machine;
         private Animator m_Anim;
-        public Sprite tmp;
-        public bool de;
 
         #region Player Status
 
@@ -56,6 +54,7 @@ namespace Script.Player
         private void Update()
         {
             m_Machine?.OnUpdate();
+            Hit(0);
         }
 
         public void Hit(float damage)
@@ -66,6 +65,7 @@ namespace Script.Player
             //     // 사망
             // }
             // else
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 m_Machine.ChangeState(typeof(Player_Hit));
             }

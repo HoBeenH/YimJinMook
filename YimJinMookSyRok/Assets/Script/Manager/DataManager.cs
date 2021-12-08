@@ -35,7 +35,7 @@ namespace Script.Manager
             {
                 var _data = File.ReadAllText(_path);
                 m_Data = JsonUtility.FromJson<PlayData>(_data);
-                _PlayerController.Inventory.LoadData(m_Data.items);
+                // _PlayerController.Inventory.LoadData(m_Data.items);
             }
             else
             {

@@ -8,7 +8,7 @@ namespace Script.FSM
     public class StateMachine<T>
     {
         private readonly Dictionary<Type, State<T>> m_States = new Dictionary<Type, State<T>>();
-        private State<T> CurrentState { get; set; }
+        internal State<T> CurrentState { get; set; }
         private readonly T m_Owner;
         private const string IDLE = "Base Layer.Player_Idle";
         private readonly WaitUntil m_Idle;

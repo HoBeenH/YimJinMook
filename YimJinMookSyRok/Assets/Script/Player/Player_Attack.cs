@@ -9,17 +9,8 @@ namespace Script.Player
     {
         private static readonly int s_Attack = Animator.StringToHash("Attack");
         private static readonly int s_AnimHash = Animator.StringToHash("Base Layer.Attack.Player_Attack_1");
-        private BoxCollider2D m_Bc;
-        private WaitUntil m_Until;
         private int m_Anim;
         private const string ANIM_NAME = "Player_Attack_3";
-
-        protected override void Init()
-        {
-            m_Bc = owner.GetComponentsInChildren<BoxCollider2D>()[1];
-            m_Bc.gameObject.SetActive(false);
-            m_Until = new WaitUntil(() => machine.anim.GetCurrentAnimatorStateInfo(0).fullPathHash == s_AnimHash);
-        }
 
         public override void OnStateEnter()
         {
@@ -46,7 +37,12 @@ namespace Script.Player
 
         private void AttackCheck()
         {
-            m_Bc.gameObject.SetActive(true);
+            var _hit = Physics2D.OverlapBoxAll(owner.transform.position, Vector2.one, 0f, 1 << 3);
+            if (_hit != null)
+            {
+                Debug.Log("!!!!");    
+            }
         }
+        
     }
 }

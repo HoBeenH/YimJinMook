@@ -1,5 +1,6 @@
-using System;
+using System.Collections;
 using Script.FSM;
+using Script.Manager;
 using UnityEngine;
 using static Script.Util.Facade;
 
@@ -10,7 +11,26 @@ namespace Script.Player
         private static readonly int s_IsMove = Animator.StringToHash("IsMove");
         private Rigidbody2D rig;
         private SpriteRenderer m_Sr;
-        private Vector2 m_Dir;
+        private bool canJump = true;
+        private Task m_Task = Task.None;
+
+        private IEnumerator JumpCoolDown()
+        {
+            canJump = false;
+            yield return new WaitForSeconds(1f);
+            canJump = true;
+        }
+
+        private void Jump()
+        {
+            if (canJump)
+            {
+                rig.AddForce(Vector2.up * 200, ForceMode2D.Force);
+                owner.StartCoroutine(JumpCoolDown());
+            }
+
+            m_Task = Task.None;
+        }
 
         protected override void Init()
         {
@@ -18,58 +38,70 @@ namespace Script.Player
             m_Sr = owner.GetComponent<SpriteRenderer>();
         }
 
+        public override void OnStateChangePoint()
+        {
+            ChangeState();
+        }
+
         public override void OnStateUpdate()
         {
+            MouseInput();
             MovementInput();
-            ActionInput();
-            Test();
         }
 
         private void MovementInput()
         {
-            if (Input.GetKey(KeyCode.A))
-            {
-                m_Sr.sprite = owner.tmp;
-                machine.anim.SetBool(s_IsMove, true);
-                m_Dir = Vector2.left;
-                m_Sr.flipX = false;
-            }
-            else if (Input.GetKey(KeyCode.D))
+            var _hor = Input.GetAxisRaw("Horizontal");
+            if (_hor != 0)
             {
                 machine.anim.SetBool(s_IsMove, true);
-                m_Dir = Vector2.right;
-                m_Sr.flipX = true;
+                m_Sr.flipX = (_hor > 0);
+                owner.transform.Translate(new Vector2(_hor, 0f) * owner.Stat.moveSpeed * Time.deltaTime);
             }
             else
             {
                 machine.anim.SetBool(s_IsMove, false);
-                m_Dir = Vector2.zero;
-            }
-
-            owner.transform.Translate(m_Dir * owner.Stat.moveSpeed * Time.deltaTime);
-        }
-
-        private void ActionInput()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                rig.AddForce(owner.transform.right * 30f * -1, ForceMode2D.Impulse);
-            }
-
-            if (Input.GetMouseButtonDown(0) && owner.de)
-            {
-                machine.ChangeState(typeof(Player_Attack));
             }
         }
 
-  
 
-        private void Test()
+        public override void OnStateExit()
         {
-            if (_MouseManager.Test)
+            // m_Task = Task.None;
+        }
+
+        private void MouseInput()
+        {
+            Debug.Log("!!!!!!");
+            if (Input.GetMouseButtonDown(0))
             {
-                rig.AddForce(Vector2.up * 100, ForceMode2D.Impulse);
+                Debug.Log("Input");
+                m_Task = _MouseManager.MouseAction();
             }
+        }
+
+        private void ChangeState()
+        {
+            if (m_Task == Task.None)
+            {
+                return;
+            }
+            switch (m_Task)
+            {
+                case Task.Jump:
+                    Jump();
+                    break;
+                case Task.Attack:
+                    machine.ChangeState(typeof(Player_Attack));
+                    break;
+                case Task.None:
+                    break;
+                default:
+                    Debug.Log("Unknown Error");
+                    break;
+            }
+
+            m_Task = Task.None;
         }
     }
 }
