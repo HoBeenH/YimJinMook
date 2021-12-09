@@ -11,25 +11,30 @@ namespace Script.Player
         private static readonly int s_IsMove = Animator.StringToHash("IsMove");
         private Rigidbody2D rig;
         private SpriteRenderer m_Sr;
-        private bool canJump = true;
         private Task m_Task = Task.None;
-
-        private IEnumerator JumpCoolDown()
-        {
-            canJump = false;
-            yield return new WaitForSeconds(1f);
-            canJump = true;
-        }
+        private bool m_NowJump = false;
 
         private void Jump()
         {
-            if (canJump)
+            if (!m_NowJump)
             {
+                m_NowJump = true;
                 rig.AddForce(Vector2.up * 200, ForceMode2D.Force);
-                owner.StartCoroutine(JumpCoolDown());
             }
 
             m_Task = Task.None;
+        }
+
+        private void IsGround()
+        {
+            if (rig.velocity.y < 0)
+            {
+                var _ray = Physics2D.Raycast(owner.transform.position, Vector2.down, 1, 1 << 7);
+                if (_ray.collider != null)
+                {
+                    m_NowJump = false;
+                }
+            }
         }
 
         protected override void Init()
@@ -46,6 +51,7 @@ namespace Script.Player
         public override void OnStateUpdate()
         {
             MouseInput();
+            IsGround();
             MovementInput();
         }
 
@@ -64,18 +70,10 @@ namespace Script.Player
             }
         }
 
-
-        public override void OnStateExit()
-        {
-            // m_Task = Task.None;
-        }
-
         private void MouseInput()
         {
-            Debug.Log("!!!!!!");
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("Input");
                 m_Task = _MouseManager.MouseAction();
             }
         }
@@ -86,6 +84,7 @@ namespace Script.Player
             {
                 return;
             }
+
             switch (m_Task)
             {
                 case Task.Jump:
