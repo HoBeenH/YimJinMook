@@ -4,15 +4,21 @@ using Script.Default;
 using Script.FSM;
 using Script.Util;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static Script.Util.Facade;
 
+public enum State
+{
+    None,
+    Dodge,
+    Defence
+}
 namespace Script.Player
 {
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
     public class PlayerController : MonoSingleton<PlayerController>
     {
         public PlayerStatus Stat { get; private set; }
+        public State state;
         public Inventory Inventory { get; private set; }
         private StateMachine<PlayerController> m_Machine;
         private Animator m_Anim;
@@ -35,6 +41,7 @@ namespace Script.Player
             m_Machine = new StateMachine<PlayerController>(new Player_Movement(), this, m_Anim);
             m_Machine.AddState(new Player_Attack());
             m_Machine.AddState(new Player_Hit());
+            m_Machine.AddState(new Player_Dodge());
 
             InitAction(ref _DataManager.save);
         }
@@ -54,21 +61,34 @@ namespace Script.Player
         private void Update()
         {
             m_Machine?.OnUpdate();
-            Hit(0);
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                Hit(0);
+            }
         }
 
         public void Hit(float damage)
         {
+            switch (state)
+            {
+                case State.None:
+                    m_Machine.ChangeState(typeof(Player_Hit));
+                    break;
+                case State.Dodge:
+                    m_Machine.anim.SetTrigger("Hit");
+                    break;
+                case State.Defence:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             // Stat.Health -= damage;
             // if (Stat.Health <= 0)
             // {
             //     // 사망
             // }
             // else
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                m_Machine.ChangeState(typeof(Player_Hit));
-            }
+            
         }
 
         public void GetItem(ItemData item)

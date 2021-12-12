@@ -1,6 +1,4 @@
-using System.Collections;
 using Script.FSM;
-using Script.Manager;
 using UnityEngine;
 using static Script.Util.Facade;
 
@@ -50,7 +48,7 @@ namespace Script.Player
 
         public override void OnStateUpdate()
         {
-            MouseInput();
+            InputValue();
             IsGround();
             MovementInput();
         }
@@ -70,11 +68,15 @@ namespace Script.Player
             }
         }
 
-        private void MouseInput()
+        private void InputValue()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                m_Task = _MouseManager.MouseAction();
+                m_Task = _Input_Manager.task;
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                m_Task = Task.Dodge;
             }
         }
 
@@ -92,6 +94,9 @@ namespace Script.Player
                     break;
                 case Task.Attack:
                     machine.ChangeState(typeof(Player_Attack));
+                    break;
+                case Task.Dodge:
+                    machine.ChangeState(typeof(Player_Dodge));
                     break;
                 case Task.None:
                     break;

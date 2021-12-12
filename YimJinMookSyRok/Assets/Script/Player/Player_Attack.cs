@@ -9,7 +9,6 @@ namespace Script.Player
     {
         private static readonly int s_Attack = Animator.StringToHash("Attack");
         private static readonly int s_AnimHash = Animator.StringToHash("Base Layer.Attack.Player_Attack_1");
-        private int m_Anim;
         private const string ANIM_NAME = "Player_Attack_3";
 
         public override void OnStateEnter()

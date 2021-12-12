@@ -1,3 +1,4 @@
+using System;
 using static Script.Util.Facade;
 
 namespace Script.Default
@@ -12,6 +13,8 @@ namespace Script.Default
     public class PlayerStatus : Status
     {
         public float maxHealth;
+        public float stamina;
+        public float maxStamina;
 
         public float Health
         {
@@ -25,6 +28,19 @@ namespace Script.Default
                 }
 
                 _UiManager.ChangeHealthValue(maxHealth, health);
+            }
+        }
+
+        public float Stamina
+        {
+            get => stamina;
+            set
+            {
+                stamina = value;
+                if (stamina > maxStamina)
+                {
+                    stamina = maxStamina;
+                }
             }
         }
 
