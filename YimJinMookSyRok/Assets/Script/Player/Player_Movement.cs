@@ -53,6 +53,11 @@ namespace Script.Player
             MovementInput();
         }
 
+        public override void OnStateExit()
+        {
+            machine.anim.SetBool(s_IsMove, false);
+        }
+
         private void MovementInput()
         {
             var _hor = Input.GetAxisRaw("Horizontal");
@@ -73,6 +78,10 @@ namespace Script.Player
             if (Input.GetMouseButtonDown(0))
             {
                 m_Task = _Input_Manager.task;
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                m_Task = Task.Defence;
             }
             else if (Input.GetKeyDown(KeyCode.LeftShift))
             {
@@ -97,6 +106,9 @@ namespace Script.Player
                     break;
                 case Task.Dodge:
                     machine.ChangeState(typeof(Player_Dodge));
+                    break;
+                case Task.Defence:
+                    machine.ChangeState(typeof(Player_Defence));
                     break;
                 case Task.None:
                     break;

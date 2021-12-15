@@ -31,6 +31,7 @@ namespace Script.Player
             if (Input.GetMouseButtonDown(0))
             {
                 machine.anim.SetTrigger(s_Attack);
+                AttackCheck();
             }
         }
 

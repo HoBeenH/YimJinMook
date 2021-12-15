@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3576168696171872263}
   - component: {fileID: 3576168696171872262}
   - component: {fileID: 3576168696171872281}
-  - component: {fileID: 3576168696171872280}
   - component: {fileID: 3576168696171872261}
   - component: {fileID: 3576168696171872260}
   - component: {fileID: 1036359589}
@@ -106,22 +105,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3576168696171872280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3576168696171872283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8322d579419f3804daa99b827c7337c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tmp: {fileID: 0}
-  _health: 0
-  _damage: 0
-  _moveSpeed: 0
 --- !u!61 &3576168696171872261
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -181,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8322d579419f3804daa99b827c7337c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tmp: {fileID: 0}
-  _health: 2
-  _damage: 3
-  _moveSpeed: 4
+  state: 0
+  _health: 100
+  _damage: 10
+  _moveSpeed: 5

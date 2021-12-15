@@ -5,7 +5,7 @@ namespace Script.Default
 {
     public class Status
     {
-        public float health;
+        protected float health;
         public float damage;
         public float moveSpeed;
     }
@@ -13,8 +13,9 @@ namespace Script.Default
     public class PlayerStatus : Status
     {
         public float maxHealth;
-        public float stamina;
+        private float stamina;
         public float maxStamina;
+        public float minStamina;
 
         public float Health
         {
@@ -26,8 +27,6 @@ namespace Script.Default
                 {
                     health = maxHealth;
                 }
-
-                _UiManager.ChangeHealthValue(maxHealth, health);
             }
         }
 
@@ -70,10 +69,13 @@ namespace Script.Default
             }
         }
 
-        public PlayerStatus(float health, float damage, float moveSpeed)
+        public PlayerStatus(float health, float damage, float moveSpeed, float stamina, float minStamina)
         {
+            this.minStamina = minStamina;
             this.health = health;
             this.maxHealth = health;
+            this.stamina = stamina;
+            this.maxStamina = stamina;
             this.damage = damage;
             this.moveSpeed = moveSpeed;
         }

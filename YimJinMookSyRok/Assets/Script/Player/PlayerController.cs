@@ -3,6 +3,8 @@ using Script.Data;
 using Script.Default;
 using Script.FSM;
 using Script.Util;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using static Script.Util.Facade;
 
@@ -10,15 +12,40 @@ public enum State
 {
     None,
     Dodge,
-    Defence
+    Defence,
+    Ex
 }
+
 namespace Script.Player
 {
     [RequireComponent(typeof(Animator), typeof(SpriteRenderer))]
     public class PlayerController : MonoSingleton<PlayerController>
     {
         public PlayerStatus Stat { get; private set; }
-        public State state;
+        private State E_State;
+
+        public State EState
+        {
+            get => E_State;
+            set
+            {
+                E_State = value;
+                switch (value)
+                {
+                    case State.None:
+                        break;
+                    case State.Dodge:
+                        break;
+                    case State.Defence:
+                        break;
+                    case State.Ex:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                }
+            }
+        }
+
         public Inventory Inventory { get; private set; }
         private StateMachine<PlayerController> m_Machine;
         private Animator m_Anim;
@@ -27,7 +54,9 @@ namespace Script.Player
 
         [SerializeField] private float _health;
         [SerializeField] private float _damage;
+        [SerializeField] private float _stamina;
         [SerializeField] private float _moveSpeed;
+        [SerializeField] private float _minStamina;
 
         #endregion
 
@@ -36,11 +65,12 @@ namespace Script.Player
         private void Init()
         {
             Inventory = new Inventory();
-            Stat = new PlayerStatus(_health, _damage, _moveSpeed);
+            Stat = new PlayerStatus(_health, _damage, _moveSpeed, _stamina, _minStamina);
             m_Anim = GetComponent<Animator>();
             m_Machine = new StateMachine<PlayerController>(new Player_Movement(), this, m_Anim);
             m_Machine.AddState(new Player_Attack());
             m_Machine.AddState(new Player_Hit());
+            m_Machine.AddState(new Player_Defence());
             m_Machine.AddState(new Player_Dodge());
 
             InitAction(ref _DataManager.save);
@@ -51,7 +81,7 @@ namespace Script.Player
             data += d =>
             {
                 d.damage = Stat.damage;
-                d.health = Stat.health;
+                d.health = Stat.Health;
                 d.maxHealth = Stat.maxHealth;
                 d.moveSpeed = Stat.moveSpeed;
             };
@@ -63,38 +93,40 @@ namespace Script.Player
             m_Machine?.OnUpdate();
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                Hit(0);
+                Hit(10);
             }
         }
 
         public void Hit(float damage)
         {
-            switch (state)
+            Stat.Health -= damage;
+            Debug.Log(Stat.Health);
+            if (Stat.Health <= 0)
             {
-                case State.None:
-                    m_Machine.ChangeState(typeof(Player_Hit));
-                    break;
-                case State.Dodge:
-                    m_Machine.anim.SetTrigger("Hit");
-                    break;
-                case State.Defence:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                // 사망
             }
-            // Stat.Health -= damage;
-            // if (Stat.Health <= 0)
-            // {
-            //     // 사망
-            // }
-            // else
-            
+
+            m_Machine.anim.SetTrigger("Hit");
+            if (EState == State.None)
+            {
+                m_Machine.ChangeState(typeof(Player_Hit));
+            }
         }
 
         public void GetItem(ItemData item)
         {
             item.action?.Invoke(this);
             Inventory.GetItem(item);
+        }
+
+
+        private void StaminaChange(float value)
+        {
+            Stat.Stamina -= value;
+            if (Stat.Stamina >= 0)
+            {
+                EState = State.Ex;
+            }
         }
     }
 }

@@ -1,15 +1,15 @@
 using Script.FSM;
 using Script.Player;
 using UnityEngine;
+using static Script.Util.Facade;
 
 public class Player_Dodge : State<PlayerController>
 {
-    private static readonly int s_AnimHash = Animator.StringToHash("Base Layer.Dodge.Player_Dodge_Transition");
     private static readonly int s_Dodge = Animator.StringToHash("Dodge");
 
     public override void OnStateEnter()
     {
-        owner.state = State.Dodge;
+        owner.EState = State.Dodge;
         machine.anim.SetBool(s_Dodge,true);
     }
 
@@ -23,7 +23,7 @@ public class Player_Dodge : State<PlayerController>
 
     public override void OnStateExit()
     {
-        owner.state = State.None;
+        owner.EState = State.None;
         machine.anim.SetBool(s_Dodge,false);
     }
 }

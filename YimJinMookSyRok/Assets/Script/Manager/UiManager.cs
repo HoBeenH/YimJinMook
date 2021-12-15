@@ -1,4 +1,7 @@
+using System.Collections;
 using Script.Util;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.UI;
 using static Script.Util.Facade;
@@ -20,21 +23,34 @@ namespace Script.Manager
                 switch (value)
                 {
                     case Task.Jump:
-                        Cursor.SetCursor(m_JumpCursor,Vector2.zero,CursorMode.Auto);
+                        Cursor.SetCursor(m_JumpCursor, Vector2.zero, CursorMode.Auto);
                         break;
                     case Task.Attack:
-                        Cursor.SetCursor(m_AttackCursor,Vector2.zero,CursorMode.Auto);
+                        Cursor.SetCursor(m_AttackCursor, Vector2.zero, CursorMode.Auto);
                         break;
                     default:
-                        Cursor.SetCursor(m_DefaultCursor,Vector2.zero,CursorMode.Auto);
+                        Cursor.SetCursor(m_DefaultCursor, Vector2.zero, CursorMode.Auto);
                         break;
                 }
             }
         }
 
         #endregion
-        public Image healthUI;
-        public Image staminaUI;
+
+        [SerializeField] private Slider healthUI;
+        [SerializeField] private Slider staminaUI;
+
+        public float healthValue
+        {
+            set => healthUI.value = value;
+        }
+
+        private float staminaValue
+        {
+            set => staminaUI.value = value;
+        }
+
+        private Coroutine m_Stamina;
 
         private void Awake()
         {
@@ -43,12 +59,53 @@ namespace Script.Manager
             m_JumpCursor = Resources.Load<Texture2D>("Cursor/Jump");
         }
 
-        public void ChangeHealthValue(float maxHealth, float currentHealth)
+        private void Update()
         {
-            healthUI.fillAmount = maxHealth / currentHealth;
+            CurrentCursor = _Input_Manager.task;
+            UIValueChange();
         }
-        
-        private void Update() => CurrentCursor = _Input_Manager.task;
 
+        private void UIValueChange()
+        {
+            CalCuJob(out var stamina, out var health);
+            healthValue = health;
+            staminaValue = stamina;
+        }
+
+        private struct StaminaJob : IJobParallelFor
+        {
+            [WriteOnly] public NativeArray<float> returnValue;
+            [ReadOnly] public NativeArray<float> max;
+            [ReadOnly] public NativeArray<float> curValue;
+
+            public void Execute([ReadOnly]int i)
+            {
+                returnValue[i] = curValue[i] / max[i];
+            }
+        }
+
+        private void CalCuJob(out float stamina, out float health)
+        {
+            var _value = new NativeArray<float>(2, Allocator.TempJob);
+            var _max = new NativeArray<float>(2, Allocator.TempJob);
+            _max[0] = _PlayerController.Stat.maxHealth;
+            _max[1] = _PlayerController.Stat.maxStamina;
+            var _cur = new NativeArray<float>(2, Allocator.TempJob);
+            _cur[0] = _PlayerController.Stat.Health;
+            _cur[1] = _PlayerController.Stat.Stamina;
+            var _job = new StaminaJob()
+            {
+                returnValue = _value,
+                max = _max,
+                curValue = _cur
+            };
+            var _handle = _job.Schedule(2, 100);
+            _handle.Complete();
+            _max.Dispose();
+            _cur.Dispose();
+            health = _value[0];
+            stamina = _value[1];
+            _value.Dispose();
+        }
     }
 }

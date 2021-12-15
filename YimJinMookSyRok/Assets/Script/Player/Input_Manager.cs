@@ -6,6 +6,7 @@ public enum Task
     Jump,
     Attack,
     Dodge,
+    Defence,
     None
 }
 
