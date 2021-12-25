@@ -7,20 +7,38 @@ namespace Script.Player
 {
     public class Player_Attack : State<PlayerController>
     {
+        private static readonly int s_Anim1Hash = Animator.StringToHash("Base Layer.Attack.Player_Attack_1");
+        private static readonly int s_Anim2Hash = Animator.StringToHash("Base Layer.Attack.Player_Attack_2");
+        private static readonly int s_Anim3Hash = Animator.StringToHash("Base Layer.Attack.Player_Attack_3");
         private static readonly int s_Attack = Animator.StringToHash("Attack");
-        private static readonly int s_AnimHash = Animator.StringToHash("Base Layer.Attack.Player_Attack_1");
-        private const string ANIM_NAME = "Player_Attack_3";
+        private WaitUntil m_WaitAttack1;
+        private WaitUntil m_WaitAttack2;
+        private WaitUntil m_WaitAttack3;
+        private SpriteRenderer m_Sr;
+        private readonly Vector2 m_Pivot = Vector2.one;
+        private Coroutine m_Co;
+
+        protected override void Init()
+        {
+            m_Sr = owner.GetComponent<SpriteRenderer>();
+            m_WaitAttack1 =
+                new WaitUntil(() => machine.anim.GetCurrentAnimatorStateInfo(0).fullPathHash == s_Anim1Hash);
+            m_WaitAttack2 =
+                new WaitUntil(() => machine.anim.GetCurrentAnimatorStateInfo(0).fullPathHash == s_Anim2Hash);
+            m_WaitAttack3 =
+                new WaitUntil(() => machine.anim.GetCurrentAnimatorStateInfo(0).fullPathHash == s_Anim3Hash);
+        }
 
         public override void OnStateEnter()
         {
             machine.anim.SetTrigger(s_Attack);
-            owner.StartCoroutine(machine.WaitIdle(typeof(Player_Movement), s_AnimHash));
-            AttackCheck();
+            owner.StartCoroutine(machine.WaitIdle(typeof(Player_Movement), s_Anim1Hash));
+            m_Co = owner.StartCoroutine(Attack());
         }
 
         public override void OnStateUpdate()
         {
-            if (machine.anim.GetCurrentAnimatorStateInfo(0).IsName(ANIM_NAME))
+            if (machine.anim.GetCurrentAnimatorStateInfo(0).fullPathHash == s_Anim3Hash)
             {
                 machine.anim.ResetTrigger(s_Attack);
             }
@@ -31,18 +49,42 @@ namespace Script.Player
             if (Input.GetMouseButtonDown(0))
             {
                 machine.anim.SetTrigger(s_Attack);
-                AttackCheck();
             }
+        }
+
+        public override void OnStateExit()
+        {
+            owner.StopCoroutine(m_Co);
+            m_Co = null;
         }
 
         private void AttackCheck()
         {
-            var _hit = Physics2D.OverlapBoxAll(owner.transform.position, Vector2.one, 0f, 1 << 3);
-            if (_hit != null)
+            var _center =
+                m_Sr.flipX
+                    ? (Vector2) owner.transform.position + m_Pivot
+                    : (Vector2) owner.transform.position - m_Pivot;
+            var _col = Physics2D.OverlapBoxAll(_center, Vector2.one, 1f, 1 << 3);
+            if (_col[0] != null)
             {
-                Debug.Log("!!!!");    
+                foreach (var c in _col)
+                {
+                    if (c.TryGetComponent(out Enemy.Enemy e))
+                    {
+                        e.Hit(owner.Stat.Damage);
+                    }
+                }
             }
         }
-        
+
+        private IEnumerator Attack()
+        {
+            yield return m_WaitAttack1;
+            AttackCheck();
+            yield return m_WaitAttack2;
+            AttackCheck();
+            yield return m_WaitAttack3;
+            AttackCheck();
+        }
     }
 }

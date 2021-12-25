@@ -9,8 +9,9 @@ public class Player_Dodge : State<PlayerController>
 
     public override void OnStateEnter()
     {
-        owner.EState = State.Dodge;
+        owner.E_State = State.Dodge;
         machine.anim.SetBool(s_Dodge,true);
+        owner.Stat.recoveryStamina -= 0.5f;
     }
 
     public override void OnStateUpdate()
@@ -23,7 +24,8 @@ public class Player_Dodge : State<PlayerController>
 
     public override void OnStateExit()
     {
-        owner.EState = State.None;
+        owner.Stat.recoveryStamina += 0.5f;
+        owner.E_State = State.None;
         machine.anim.SetBool(s_Dodge,false);
     }
 }

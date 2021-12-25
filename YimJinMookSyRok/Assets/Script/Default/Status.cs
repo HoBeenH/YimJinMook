@@ -15,7 +15,7 @@ namespace Script.Default
         public float maxHealth;
         private float stamina;
         public float maxStamina;
-        public float minStamina;
+        public float recoveryStamina;
 
         public float Health
         {
@@ -39,6 +39,10 @@ namespace Script.Default
                 if (stamina > maxStamina)
                 {
                     stamina = maxStamina;
+                }
+                else if (stamina < 0)
+                {
+                    stamina = 0;
                 }
             }
         }
@@ -69,15 +73,31 @@ namespace Script.Default
             }
         }
 
-        public PlayerStatus(float health, float damage, float moveSpeed, float stamina, float minStamina)
+        public PlayerStatus(float health, float damage, float moveSpeed, float stamina, float recoveryStamina)
         {
-            this.minStamina = minStamina;
             this.health = health;
             this.maxHealth = health;
             this.stamina = stamina;
             this.maxStamina = stamina;
             this.damage = damage;
             this.moveSpeed = moveSpeed;
+            this.recoveryStamina = recoveryStamina;
+        }
+    }
+
+    public class EnemyStatus : Status
+    {
+        public float Health
+        {
+            get => base.health;
+            set => base.health = value;
+        }
+
+        public EnemyStatus(float health, float damage, float moveSpeed)
+        {
+            base.health = health;
+            base.damage = damage;
+            base.moveSpeed = moveSpeed;
         }
     }
 }

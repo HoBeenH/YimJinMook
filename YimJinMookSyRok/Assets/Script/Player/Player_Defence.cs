@@ -1,7 +1,6 @@
 using System.Collections;
 using Script.FSM;
 using UnityEngine;
-using static Script.Util.Facade;
 
 namespace Script.Player
 {
@@ -11,8 +10,9 @@ namespace Script.Player
 
         public override void OnStateEnter()
         {
-            owner.EState = State.Defence;
+            owner.E_State = State.Defence;
             machine.anim.SetBool(s_DefAnim, true);
+            owner.Stat.recoveryStamina -= 0.5f;
         }
 
         public override void OnStateUpdate()
@@ -22,13 +22,13 @@ namespace Script.Player
                 machine.ChangeState(typeof(Player_Movement));
             }
 
-            owner.Stat.Stamina -= 0.05f;
         }
 
         public override void OnStateExit()
         {
             machine.anim.SetBool(s_DefAnim, false);
-            owner.EState = State.None;
+            owner.E_State = State.None;
+            owner.Stat.recoveryStamina += 0.5f;
         }
     }
 }

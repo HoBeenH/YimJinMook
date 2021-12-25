@@ -13,12 +13,11 @@ namespace Script.FSM
         public Type StateType => CurrentState.GetType();
 
         private readonly T m_Owner;
-        private const string IDLE = "Base Layer.Player_Idle";
         private readonly WaitUntil m_Idle;
 
         public readonly Animator anim;
 
-        public StateMachine(State<T> state, T owner, Animator anim)
+        public StateMachine(State<T> state, T owner, Animator anim, string idle)
         {
             m_Owner = owner;
             CurrentState = state;
@@ -26,7 +25,7 @@ namespace Script.FSM
             AddState(state);
             CurrentState?.OnStateEnter();
             m_Idle = new WaitUntil(
-                () => anim.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash(IDLE));
+                () => anim.GetCurrentAnimatorStateInfo(0).fullPathHash == Animator.StringToHash(idle));
         }
 
         public IEnumerator WaitIdle(Type type, params int[] state)
