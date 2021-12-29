@@ -537,8 +537,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: " Movement - A D\n Input 'R' Click - Defence\n Input LeftShift - Dodge\nInput
-    Q - Hit\n Red - Enemy\n Blue - Jump"
+  m_Text: " Movement - A D\n Input Space - Defence\n Input Q - Hit\n Input Space
+    & Movement - Dodge\n"
 --- !u!222 &397730122
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -862,7 +862,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.27441674, y: 0.16942286, z: -9.853583}
+  m_LocalPosition: {x: -3.8855832, y: 0.16942286, z: -9.853583}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2041032480}
@@ -908,6 +908,14 @@ PrefabInstance:
       value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872261, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_Size.y
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576168696171872261, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576168696171872261, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_SpriteTilingProperty.drawMode
       value: 0
       objectReference: {fileID: 0}
@@ -915,13 +923,29 @@ PrefabInstance:
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 1.24
       objectReference: {fileID: 0}
+    - target: {fileID: 3576168696171872261, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 5.1233354
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576168696171872261, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2.56
+      objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872262, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_FlipX
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872262, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2311659948842064771, guid: 340fe6653639f9a458c5ded3309ca63a, type: 3}
+    - target: {fileID: 3576168696171872262, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_DrawMode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576168696171872262, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
+      propertyPath: m_SortingOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872262, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_SpriteSortPoint
@@ -933,7 +957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872263, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -4.16
       objectReference: {fileID: 0}
     - target: {fileID: 3576168696171872263, guid: 209762d9d570b7843b200a693f1ed5aa, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1174,7 +1198,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619095977}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.83, y: 0, z: 0}
+  m_LocalPosition: {x: 0.29, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1234,7 +1258,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619095977}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc4008f8a79c1e54386550fd61f70dd0, type: 3}
   m_Name: 
@@ -1731,7 +1755,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1829,7 +1853,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239697622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.27441674, y: 0.16942286, z: -9.853583}
+  m_LocalPosition: {x: -3.8855832, y: 0.16942286, z: -9.853583}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1503642025}

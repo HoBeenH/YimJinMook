@@ -17,11 +17,10 @@ namespace Script.Player
 
         public override void OnStateUpdate()
         {
-            if (Input.GetMouseButtonUp(1))
+            if (Input.GetKeyUp(KeyCode.Space))
             {
                 machine.ChangeState(typeof(Player_Movement));
             }
-
         }
 
         public override void OnStateExit()

@@ -79,13 +79,13 @@ namespace Script.Player
             {
                 m_Task = _Input_Manager.task;
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                m_Task = Task.Defence;
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftShift))
+            else if (Input.GetKeyDown(KeyCode.Space) && machine.anim.GetBool(s_IsMove))
             {
                 m_Task = Task.Dodge;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+                m_Task = Task.Defence;
             }
         }
 

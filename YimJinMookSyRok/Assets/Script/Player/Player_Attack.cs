@@ -17,6 +17,7 @@ namespace Script.Player
         private SpriteRenderer m_Sr;
         private readonly Vector2 m_Pivot = Vector2.one;
         private Coroutine m_Co;
+        private bool m_CanAttack = true;
 
         protected override void Init()
         {
@@ -46,10 +47,18 @@ namespace Script.Player
 
         public override void OnStateChangePoint()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && m_CanAttack)
             {
+                owner.StartCoroutine(AttackDelay());
                 machine.anim.SetTrigger(s_Attack);
             }
+        }
+
+        private IEnumerator AttackDelay()
+        {
+            m_CanAttack = false;
+            yield return new WaitForSeconds(0.5f);
+            m_CanAttack = true;
         }
 
         public override void OnStateExit()
