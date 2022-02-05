@@ -15,26 +15,7 @@ namespace Script.Manager
         private Texture2D m_DefaultCursor;
         private Texture2D m_AttackCursor;
         private Texture2D m_JumpCursor;
-
-        private Task CurrentCursor
-        {
-            set
-            {
-                switch (value)
-                {
-                    case Task.Jump:
-                        Cursor.SetCursor(m_JumpCursor, Vector2.zero, CursorMode.Auto);
-                        break;
-                    case Task.Attack:
-                        Cursor.SetCursor(m_AttackCursor, Vector2.zero, CursorMode.Auto);
-                        break;
-                    default:
-                        Cursor.SetCursor(m_DefaultCursor, Vector2.zero, CursorMode.Auto);
-                        break;
-                }
-            }
-        }
-
+        
         #endregion
 
         [SerializeField] private Slider healthUI;
@@ -52,16 +33,19 @@ namespace Script.Manager
 
         private Coroutine m_Stamina;
 
+        
         private void Awake()
         {
             m_DefaultCursor = Resources.Load<Texture2D>("Cursor/Default");
             m_AttackCursor = Resources.Load<Texture2D>("Cursor/Attack");
             m_JumpCursor = Resources.Load<Texture2D>("Cursor/Jump");
+            EventSystem.BindEvent(Task.Attack, sender => Cursor.SetCursor(m_AttackCursor, Vector2.zero, CursorMode.Auto));
+            EventSystem.BindEvent(Task.Jump, sender => Cursor.SetCursor(m_JumpCursor, Vector2.zero, CursorMode.Auto));
+            EventSystem.BindEvent(Task.None, sender => Cursor.SetCursor(m_DefaultCursor, Vector2.zero, CursorMode.Auto));
         }
 
         private void Update()
         {
-            CurrentCursor = _Input_Manager.task;
             UIValueChange();
         }
 

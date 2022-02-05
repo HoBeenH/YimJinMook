@@ -14,5 +14,6 @@ namespace Script.Util
         public static ItemPool _ItemPool => ItemPool.Instance;
         public static Input_Manager _Input_Manager => Input_Manager.Instance;
         public static LoadSceneManager _LoadSceneManager => LoadSceneManager.Instance;
+        public static EventSystem _EventSystem => EventSystem.Instance;
     }
 }

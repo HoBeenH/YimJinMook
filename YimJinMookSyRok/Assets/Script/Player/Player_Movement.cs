@@ -11,7 +11,7 @@ namespace Script.Player
         private SpriteRenderer m_Sr;
         private Task m_Task = Task.None;
         private bool m_NowJump = false;
-
+        
         private void Jump()
         {
             if (!m_NowJump)
@@ -39,11 +39,11 @@ namespace Script.Player
         {
             rig = owner.GetComponent<Rigidbody2D>();
             m_Sr = owner.GetComponent<SpriteRenderer>();
-        }
-
-        public override void OnStateChangePoint()
-        {
-            ChangeState();
+            
+            EventSystem.BindEvent(Task.Attack, sender => machine.ChangeState(typeof(Player_Attack)));
+            EventSystem.BindEvent(Task.Dodge, sender => machine.ChangeState(typeof(Player_Dodge)));
+            EventSystem.BindEvent(Task.Defence, sender => machine.ChangeState(typeof(Player_Defence)));
+            EventSystem.BindEvent(Task.Jump, sender => Jump());
         }
 
         public override void OnStateUpdate()
@@ -76,48 +76,11 @@ namespace Script.Player
         private void InputValue()
         {
             if (Input.GetMouseButtonDown(0))
-            {
-                m_Task = _Input_Manager.task;
-            }
+                EventSystem.CallEvent(_Input_Manager.MouseAction());
             else if (Input.GetKeyDown(KeyCode.Space) && machine.anim.GetBool(s_IsMove))
-            {
-                m_Task = Task.Dodge;
-            }
+                EventSystem.CallEvent(Task.Dodge);
             else if (Input.GetKeyDown(KeyCode.Space))
-            {
-                m_Task = Task.Defence;
-            }
-        }
-
-        private void ChangeState()
-        {
-            if (m_Task == Task.None)
-            {
-                return;
-            }
-
-            switch (m_Task)
-            {
-                case Task.Jump:
-                    Jump();
-                    break;
-                case Task.Attack:
-                    machine.ChangeState(typeof(Player_Attack));
-                    break;
-                case Task.Dodge:
-                    machine.ChangeState(typeof(Player_Dodge));
-                    break;
-                case Task.Defence:
-                    machine.ChangeState(typeof(Player_Defence));
-                    break;
-                case Task.None:
-                    break;
-                default:
-                    Debug.Log("Unknown Error");
-                    break;
-            }
-
-            m_Task = Task.None;
+                EventSystem.CallEvent(Task.Defence);
         }
     }
 }
